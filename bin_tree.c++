@@ -1,7 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-
 typedef struct bin_node
 {
     int parent;
@@ -111,9 +110,9 @@ private:
         bin_node problem_child = bin_tree[rchild];
 
         bin_tree[curr_root].rchild = problem_child.lchild;
-        if(problem_child.rchild != -1)
+        if(problem_child.lchild != -1)
         {
-            bin_tree[problem_child.rchild].parent = curr_root;
+            bin_tree[problem_child.lchild].parent = curr_root;
         }
 
         bin_tree[rchild].lchild = curr_root;
@@ -163,7 +162,7 @@ private:
         {p = -1;}
         else { p = bin_tree[curr_parent].val; }
 
-        //printf("root:%d p:%d\n", bin_tree[curr_root].val, p);
+        printf("root:%d p:%d\n", bin_tree[curr_root].val, p);
 
         bin_node curr_node = bin_tree[curr_root];
         bin_node problem_child;
@@ -173,15 +172,15 @@ private:
         {
             problem_child = bin_tree[curr_node.rchild];
 
-            if(problem_child.height == 1)
+            if(problem_child.height == -1)
             {
-                printf("RL\n");
-                new_head = RL(curr_node.rchild, curr_root, curr_parent);
+                printf("RR\n");
+                new_head = RR(curr_node.rchild, curr_root, curr_parent);
             }
             else
             {
                 printf("RL\n");
-                new_head = RR(curr_node.rchild, curr_root, curr_parent);
+                new_head = RL(curr_node.rchild, curr_root, curr_parent);
             }
         }
         else
@@ -255,6 +254,7 @@ private:
 
         bin_node curr_node = bin_tree[index];
         printf("val:%d lchild:%d rchild:%d\n", curr_node.val, curr_node.lchild, curr_node.rchild);
+
         if(curr_node.lchild == -1 || curr_node.rchild == -1)
         {
             int parent_index = curr_node.parent;
@@ -277,11 +277,11 @@ private:
                 child_val = curr_node.lchild;
             }
         
-            bin_tree.erase(bin_tree.begin() + index);
+            //bin_tree.erase(bin_tree.begin() + index);
 
             if(parent_index != -1)
             {
-                if(child_side)
+                if(child_side == 1)
                 {
                     printf("lchild of %d\n", bin_tree[parent_index].val);
                     bin_tree[parent_index].lchild = child_val;
@@ -324,7 +324,7 @@ private:
                 curr_p = bin_tree[bin_tree[curr_root].parent].val;
             }
 
-            printf(" %d,p: %d, h: %d", bin_tree[curr_root].val, curr_p, bin_tree[curr_root].height);
+            printf("%d->index: %d,\np: %d, h: %d", bin_tree[curr_root].val, curr_root, curr_p, bin_tree[curr_root].height);
             printf(" lchild: %d, rchild %d\n", bin_tree[curr_root].lchild, bin_tree[curr_root].rchild);
 
             preorder_traverse(bin_tree[curr_root].lchild);
@@ -337,7 +337,7 @@ private:
         if(curr_root != -1)
         {
             inorder_traverse(bin_tree[curr_root].lchild);
-            printf(" %d(%d),", bin_tree[curr_root].val, bin_tree[curr_root].parent);
+            printf(" %d,", bin_tree[curr_root].val);
             inorder_traverse(bin_tree[curr_root].rchild);
         }
     }
@@ -370,16 +370,23 @@ public:
 
     void delete_node(int value = -1)
     {
-        if(value == -1)
+        int curr_size = bin_tree.size();
+        if(curr_size > 0)
         {
-            bin_tree.pop_back();
-        }
-        else
-        {
-            remove_node(value, root);
-        }
+            if(value == -1)
+            {
+                bin_tree.pop_back();
+            }
+            else
+            {
+                remove_node(value, root);
+            }
 
-        //balance_tree(root);
+            if(curr_size - 1 > 0)
+            {
+                //balance_tree(root);
+            }
+        }
     }
 
     void inorder_print()
@@ -404,31 +411,33 @@ public:
 int main()
 {
     BStree bst;
-    int num;
 
-    printf("Enter the number of nodes: ");
-    cin >> num;
+    vector<int> sample = {10,5,15,3,8,12,21,42};
+
+    int num = sample.size();
+
+    //printf("Enter the number of nodes: ");
+    //cin >> num;
 
     for(int i = 0; i < num; i++)
     {
-        int n;
-        printf("Enter the number: ");
-        cin >> n;
+        int n = sample[i];
+        //printf("Enter the number: ");
+        //cin >> n;
         bst.add_node(n);
     }
 
-    bst.preorder_print();
-    bst.balance_bstree();
-    bst.preorder_print();
+    bst.inorder_print();
+    /*bst.balance_bstree();
+    bst.preorder_print();*/
 
-    /*int del_num;
-    printf("Enter the node to delete: ");
-    cin >> del_num;
+    int del_num = 10;
+    //printf("Enter the node to delete: ");
+    //cin >> del_num;
 
     bst.delete_node(del_num);
     bst.inorder_print();
-    bst.balance_bstree();
-    bst.preorder_print();*/
+    bst.preorder_print();
 
     return 0;
 }
