@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 
 void display_vector(vector<int> num_arr)
@@ -295,6 +294,27 @@ int BFPRT(vector<int> num_arr, int k)
 
     return BFPRT(r_arr, k - l_arr.size() - 1);
 }
+
+
+/*** heap sort ***/
+class heap_tree
+{
+    typedef struct heap_node
+    {
+        struct heap_node *parent;
+        struct heap_node *rchild;
+        struct heap_node *lchild;
+        int val;
+
+        heap_node(int value, struct heap_node *pt = nullptr)
+        {
+            parent = pt;
+            val = value;
+            lchild = rchild = nullptr;
+        }
+    }heap_node;
+
+};
 
 
 int main()
